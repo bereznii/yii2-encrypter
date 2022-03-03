@@ -1,21 +1,20 @@
 <?php
+
 /**
  * Contains the behavior class used to encrypt data before storing it on a
  * database with an ActiveRecord class.
  *
- * @link http://www.creationgears.com/
- * @copyright Copyright (c) 2015 Nicola Puddu
- * @license http://www.gnu.org/copyleft/gpl.html
+ * @copyright Copyright (c) 2022 Dmytro Bereznii
  * @package bereznii/yii2-encrypter
  * @author Dmytro Bereznii <bereznii.d@gmail.com>
  */
 
 namespace bereznii\encrypter\behaviors;
 
+use bereznii\encrypter\components\Encrypter;
 use yii\db\ActiveRecord;
 use yii\base\Event;
 use yii\base\Behavior;
-use bereznii\encrypter\Encrypter;
 use yii\base\InvalidConfigException;
 
 /**
@@ -40,11 +39,12 @@ use yii\base\InvalidConfigException;
  * ```
  *
  * @author Dmytro Bereznii <bereznii.d@gmail.com>
- * @version 1.0
+ * @version 1.2
  */
 class EncryptionBehavior extends Behavior
 {
-    public $attributes = [];
+    /** @var array */
+    public array $attributes = [];
 
     /**
      * Adds to the behavior the listeners for the following events:
@@ -72,6 +72,7 @@ class EncryptionBehavior extends Behavior
      * configuration.
      *
      * @param Event $event
+     * @throws InvalidConfigException
      */
     public function decryptAllAttributes(Event $event)
     {
@@ -85,6 +86,7 @@ class EncryptionBehavior extends Behavior
      * configuration.
      *
      * @param Event $event
+     * @throws InvalidConfigException
      */
     public function encryptAllAttributes(Event $event)
     {
@@ -97,6 +99,7 @@ class EncryptionBehavior extends Behavior
      * Decrypts the value of the given attribute.
      *
      * @param string $attribute the attribute name
+     * @throws InvalidConfigException
      */
     private function decryptValue($attribute)
     {
@@ -109,6 +112,7 @@ class EncryptionBehavior extends Behavior
      * Encrypts the value of the given attribute.
      *
      * @param string $attribute the attribute name
+     * @throws InvalidConfigException
      */
     private function encryptValue($attribute)
     {

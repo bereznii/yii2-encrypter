@@ -1,15 +1,33 @@
 Openssl Encrypter for Yii2
 ======================
 Openssl Encrypter for Yii2
-Version 1.1.0
+Version 1.2
 
 This extension is used for two-way encryption.
-The cypher method used is **AES**, and you can either use the **128 bites** or **256 bites** encryption.
+The cypher method used is **AES256**.
 
-You can also decide whether you want to use base64 encoding on the encrypted string to make it easier to store it, keeping in mind that the additional encoding will always increase the size of the string.
+The main difference from [original package](https://github.com/nickcv-ln/yii2-encrypter) is usage of unique initialization vector for each operation. 
+The main purpose is to provide additional level of security by randomization of resulting hash. 
+Also, as it seems from threads on stackoverflow, publicly stored IV is a very bad practice. However, it is needed to decrypt value. 
+Implemented idea is described below. 
+
+Step-by-step **encryption**:
+1. Passphrase (32 bytes length) is being stored as ENV constant;
+2. Unique IV is randomly generated for each encryption operation by [openssl_random_pseudo_bytes()](https://www.php.net/manual/en/function.openssl-random-pseudo-bytes.php) and is presented as 16 bytes length string;
+3. Input is encrypted with [openssl_encrypt()](https://www.php.net/manual/en/function.openssl-encrypt.php). Result is encrypted byte-string;
+4. IV (16 bytes) is prepended in front of byte-string from previous step;
+5. Concatenated string is encoded with [base64_encode()](https://www.php.net/manual/en/function.base64-encode) to avoid encoding problems when transferring over a network or storing in a database.
+6. Result is a securely encrypted and encoded string.
+
+Step-by-step **decryption**:
+1. Fully encrypted string is decoded with [base64_decode()](https://www.php.net/manual/en/function.base64-decode.php);
+2. First 16 bytes is retrieved for further decryption process. This is IV;
+3. Remaining part of string is encrypted with [openssl_decrypt()](https://www.php.net/manual/en/function.openssl-decrypt) using IV from previous step and passphrase from ENV;
+4. Result is the initial string.
 
 Openssl has been used in place of mcrypt because of its sheer speed in the encryption and decryption process (**up to 30 times faster**).
 
+_______________________
 
 Installation
 ------------
@@ -30,59 +48,42 @@ or add
 
 to the require section of your `composer.json` file.
 
-
 Set Up
 ------
 
-**Automatic Installation**
-_______________________
-
-Modify your ```console.php``` config file, adding the encrypter to the list of bootstrapped modules
+To use Encrypter component it needs to be registered in [Components list of Yii2 Application](https://www.yiiframework.com/doc/guide/2.0/en/structure-application-components).
 
 ```
-'bootstrap' => ['log','encrypter'],
+'components' => [
+    'encrypter' => [
+        'class' => \bereznii\encrypter\components\Encrypter::class,
+        'key' => getenv('ENCRYPTION_KEY'),
+    ],
+    ...
+]
 ```
 
-Add then the module to the module list
+## Basic Usage
+
+### Component
+
+Encrypter can be used both from web and console.
+
+To encrypt value manually in any part of the application encrypter can be used as follows:
 
 ```
-'modules' => [
-    'encrypter' => 'bereznii\encrypter\Module',
-],
+Yii::$app->encrypter->encrypt('Hello World!');
 ```
 
-At this point you will be able to simply execute from the root of your app directory the command ```./yii encrypter/setup```
-
-The command will automatically generate the config file ```encrypter.php``` in your application ```config``` directory. The generated config file will contain a randomly generated password and IV.
-
-You will now only have to add the extension to your ```web.php``` config file
+or to decrypt:
 
 ```
-'encrypter' => require(__DIR__ . DIRECTORY_SEPARATOR . 'encrypter.php'),
+Yii::$app->encrypter->decrypt('Hello World!');
 ```
 
-_______________________
+### Behavior
 
-Basic Usage
------
-
-You can now use the encrypter manually in any part of the application to either encrypt a string
-
-```
-\Yii::$app->encrypter->encrypt('string to encrypt');
-```
-
-or decrypt and encrypted string
-
-```
-\Yii::$app->encrypter->decrypt('string to decrypt');
-```
-
-
-Behavior
---------
-
-The extension also comes with a behavior that you can easily attach to any ActiveRecord Model.
+The extension also comes with a behavior class that can be easily attached to any ActiveRecord Model.
 
 Use the following syntax to attach the behavior.
 
@@ -91,10 +92,10 @@ public function behaviors()
 {
     return [
         'encryption' => [
-            'class' => '\bereznii\encrypter\behaviors\EncryptionBehavior',
+            'class' => \bereznii\encrypter\behaviors\EncryptionBehavior::class,
             'attributes' => [
-                'attributeName',
-                'otherAttributeName',
+                'attributeName1',
+                'attributeName2',
             ],
         ],
     ];
@@ -105,22 +106,16 @@ The behavior will automatically encrypt all the data before saving it on the dat
 
 **Keep in mind that the behavior will use the current configuration of the extension for the encryption.**
 
-Console Commands
-----------------
-
-If the console module is installed you can also use the ```./yii encrypter/encrypt``` and ```./yii encrypter/decrypt``` console commands.  
-
-To find out how to install the console module follow the "**Automatic Installation**" instructions in this document.
-
 Unit Testing
 ------------
 
-The entire extension was built with TDD.
-To launch the tests just go inside the extension directory and execute the ```codecept run``` command.
+[Original package](https://github.com/nickcv-ln/yii2-encrypter) was built with TDD. However, current package is not covered with
+unit-tests due to lack of time caused by russian invasion to Ukraine. 
+Hopefully, one day unit tests will be added and package will become more customizable. But until then, it is published for educational purposes only.
 
 Warnings
 --------
 
-It is extremely hard to decrypt the data without the password and IV, keep a copy of them to avoid losing all your data.
+It is extremely hard (or practically impossible) to decrypt the data without the password, copy of it should be store in secure place to avoid losing all encrypted data.
 
 **Two-way encryption should not be used to store passwords: you should use a one-way encryption function like sha1 and a SALT**

@@ -1,10 +1,9 @@
 <?php
+
 /**
  * Contains the component used for encrypting and decrypting data.
  *
- * @link http://www.creationgears.com/
- * @copyright Copyright (c) 2015 Nicola Puddu
- * @license http://www.gnu.org/copyleft/gpl.html
+ * @copyright Copyright (c) 2022 Dmytro Bereznii
  * @package bereznii/yii2-encrypter
  * @author Dmytro Bereznii <bereznii.d@gmail.com>
  */
@@ -18,7 +17,7 @@ use yii\base\InvalidConfigException;
  * Encrypter is the class that is used to encrypt and decrypt the data.
  *
  * @author Dmytro Bereznii <bereznii.d@gmail.com>
- * @version 1.0
+ * @version 1.2
  */
 class Encrypter extends Component
 {
@@ -27,11 +26,12 @@ class Encrypter extends Component
     public const IV_LENGTH = 16;
     public const KEY_LENGTH = 32;
 
-    /** @var string Contains the global password used to encrypt and decrypt. */
+    /** @var string $_key Contains the global password used to encrypt and decrypt. */
     private $_key;
 
     /**
      * Checks that the key and iv have indeed been set.
+     *
      * @inheritdoc
      * @throws InvalidConfigException
      */
@@ -45,7 +45,8 @@ class Encrypter extends Component
     }
 
     /**
-     * Sets the global password for the encrypter
+     * Sets the global password for the encrypter.
+     *
      * @param string $key the global password
      * @throws InvalidConfigException
      */
@@ -65,6 +66,8 @@ class Encrypter extends Component
     }
 
     /**
+     * Get a pseudo-random string of bytes as initialization vector.
+     *
      * @return false|string
      */
     public function getIv()
@@ -86,6 +89,7 @@ class Encrypter extends Component
 
     /**
      * False is returned in case it was not possible to decrypt it.
+     *
      * @param string $string the string to decrypt
      * @return string|bool the decrypted string
      */
@@ -106,6 +110,7 @@ class Encrypter extends Component
 
     /**
      * Returns the cypher method based on the current configuration.
+     *
      * @return string the cypher method
      */
     private function getCypherMethod(): string

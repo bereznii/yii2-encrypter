@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contains the module class used to have encrypt console commands.
  *
@@ -6,6 +7,7 @@
  * @package bereznii/yii2-encrypter
  * @author Dmytro Bereznii <bereznii.d@gmail.com>
  */
+
 namespace bereznii\encrypter;
 
 use yii\base\BootstrapInterface;
@@ -14,7 +16,7 @@ use yii\base\BootstrapInterface;
  * Bootstrap the module to allow the use of the console commands.
  *
  * @author Dmytro Bereznii <bereznii.d@gmail.com>
- * @version 1.1.1
+ * @version 1.2
  * @property-read \bereznii\encrypter\components\Encrypter $encrypter
  */
 class Module extends \yii\base\Module implements BootstrapInterface
