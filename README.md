@@ -19,13 +19,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist nickcv/yii2-encrypter "*"
+composer require bereznii/yii2-encrypter
 ```
 
 or add
 
 ```
-"nickcv/yii2-encrypter": "*"
+"bereznii/yii2-encrypter": "*"
 ```
 
 to the require section of your `composer.json` file.
@@ -43,7 +43,7 @@ Add the following lines in the ```components``` section of your ```web.php``` fi
 
 ```
 return [
-    'class'=>'\nickcv\encrypter\components\Encrypter',
+    'class'=>'\bereznii\encrypter\components\Encrypter',
     'globalPassword'=>'YourPassword',
     'iv'=>'YourIV',
     'useBase64Encoding'=>true,
@@ -70,7 +70,7 @@ Add then the module to the module list
 
 ```
 'modules' => [
-    'encrypter' => 'nickcv\encrypter\Module',
+    'encrypter' => 'bereznii\encrypter\Module',
 ],
 ```
 
@@ -114,7 +114,7 @@ public function behaviors()
 {
     return [
         'encryption' => [
-            'class' => '\nickcv\encrypter\behaviors\EncryptionBehavior',
+            'class' => '\bereznii\encrypter\behaviors\EncryptionBehavior',
             'attributes' => [
                 'attributeName',
                 'otherAttributeName',
