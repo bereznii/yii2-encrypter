@@ -2,26 +2,26 @@
 /**
  * Contains the behavior class used to encrypt data before storing it on a
  * database with an ActiveRecord class.
- * 
+ *
  * @link http://www.creationgears.com/
  * @copyright Copyright (c) 2015 Nicola Puddu
  * @license http://www.gnu.org/copyleft/gpl.html
- * @package nickcv/yii2-encrypter
- * @author Nicola Puddu <n.puddu@outlook.com>
+ * @package bereznii/yii2-encrypter
+ * @author Dmytro Bereznii <bereznii.d@gmail.com>
  */
 
-namespace nickcv\encrypter\behaviors;
+namespace bereznii\encrypter\behaviors;
 
 use yii\db\ActiveRecord;
 use yii\base\Event;
 use yii\base\Behavior;
-use nickcv\encrypter\Encrypter;
+use bereznii\encrypter\Encrypter;
 use yii\base\InvalidConfigException;
 
 /**
  * This Behavior is used to encrypt data before storing it on the database
  * and to decrypt it upon retrieval.
- * 
+ *
  * To attach this behavior to an ActiveRecord add the following code
  * ```php
  *
@@ -29,7 +29,7 @@ use yii\base\InvalidConfigException;
  *  {
  *      return [
  *          'encryption' => [
- *              'class' => '\nickcv\encrypter\behaviors\EncryptionBehavior',
+ *              'class' => \bereznii\encrypter\behaviors\EncryptionBehavior::class,
  *              'attributes' => [
  *                  'attribute1',
  *                  'attribute2',
@@ -38,8 +38,8 @@ use yii\base\InvalidConfigException;
  *      ];
  *  }
  * ```
- * 
- * @author Nicola Puddu <n.puddu@outlook.com>
+ *
+ * @author Dmytro Bereznii <bereznii.d@gmail.com>
  * @version 1.0
  */
 class EncryptionBehavior extends Behavior
@@ -53,7 +53,7 @@ class EncryptionBehavior extends Behavior
      * BEFORE_UPDATE
      * AFTER_INSERT
      * AFTER_UPDATE
-     * 
+     *
      * @return array
      */
     public function events()
@@ -70,7 +70,7 @@ class EncryptionBehavior extends Behavior
     /**
      * Decrypts all the listed attributes by the ActiveRecord in the behavior
      * configuration.
-     * 
+     *
      * @param Event $event
      */
     public function decryptAllAttributes(Event $event)
@@ -83,7 +83,7 @@ class EncryptionBehavior extends Behavior
     /**
      * Encrypts all the listed attributes by the ActiveRecord in the behavior
      * configuration.
-     * 
+     *
      * @param Event $event
      */
     public function encryptAllAttributes(Event $event)
@@ -95,19 +95,19 @@ class EncryptionBehavior extends Behavior
 
     /**
      * Decrypts the value of the given attribute.
-     * 
+     *
      * @param string $attribute the attribute name
      */
     private function decryptValue($attribute)
     {
-        
+
         $this->owner->$attribute = $this->getEncrypter()->decrypt($this->owner->$attribute);
-        
+
     }
 
     /**
      * Encrypts the value of the given attribute.
-     * 
+     *
      * @param string $attribute the attribute name
      */
     private function encryptValue($attribute)
@@ -117,7 +117,7 @@ class EncryptionBehavior extends Behavior
 
     /**
      * Returns the Encrypter component used by the behavior.
-     * 
+     *
      * @return Encrypter
      * @throws InvalidConfigException
      */
@@ -127,7 +127,6 @@ class EncryptionBehavior extends Behavior
             return \Yii::$app->encrypter;
         } catch (\Exception $exc) {
             throw new InvalidConfigException('Encrypter component not enabled.');
-        }        
+        }
     }
-
 }

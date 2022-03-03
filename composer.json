@@ -3,7 +3,8 @@
     "description": "Openssl Encrypter for Yii2",
     "type": "yii2-extension",
     "keywords": ["yii2","extension","behavior","active record","encryption","openssl"],
-    "license": "GPL-3.0",
+    "license": "MIT",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Dmytro Bereznii",
@@ -11,7 +12,8 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "*"
+        "php": ">=7.4",
+        "yiisoft/yii2": "2.*"
     },
     "autoload": {
         "psr-4": {

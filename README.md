@@ -34,29 +34,6 @@ to the require section of your `composer.json` file.
 Set Up
 ------
 
-Once the extension is installed you can either add manually the configuration in the ```web.php``` file or you can use the command line installer that will randomly generate your encryption password and IV.
-
-**Manual Installation**
-_______________________
-
-Add the following lines in the ```components``` section of your ```web.php``` file.
-
-```
-return [
-    'class'=>'\bereznii\encrypter\components\Encrypter',
-    'globalPassword'=>'YourPassword',
-    'iv'=>'YourIV',
-    'useBase64Encoding'=>true,
-    'use256BitesEncoding'=>false,
-];
-```
-
-I recommend using base64 encoding to make it easier to store the encrypted string.
-
-**The IV must always be 16 bites long**, keep that in mind in case you use multibyte characters.
-
-_______________________
-
 **Automatic Installation**
 _______________________
 

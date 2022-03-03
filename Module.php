@@ -1,46 +1,50 @@
 <?php
 /**
  * Contains the module class used to have encrypt console commands.
- * 
- * @link http://www.creationgears.com/
- * @copyright Copyright (c) 2015 Nicola Puddu
- * @license http://www.gnu.org/copyleft/gpl.html
- * @package nickcv/yii2-encrypter
- * @author Nicola Puddu <n.puddu@outlook.com>
+ *
+ * @copyright Copyright (c) 2022 Dmytro Bereznii
+ * @package bereznii/yii2-encrypter
+ * @author Dmytro Bereznii <bereznii.d@gmail.com>
  */
-namespace nickcv\encrypter;
+namespace bereznii\encrypter;
 
 use yii\base\BootstrapInterface;
 
 /**
  * Bootstrap the module to allow the use of the console commands.
- * 
- * @author Nicola Puddu <n.puddu@outlook.com>
- * @version 1.1.0
- * @property-read \nickcv\encrypter\components\Encrypter $encrypter
+ *
+ * @author Dmytro Bereznii <bereznii.d@gmail.com>
+ * @version 1.1.1
+ * @property-read \bereznii\encrypter\components\Encrypter $encrypter
  */
 class Module extends \yii\base\Module implements BootstrapInterface
-{   
+{
+    /**
+     * @return void
+     */
     public function init()
-    {   
+    {
         $configFile = \Yii::getAlias('@app/config/encrypter.php');
-        
+
         if (file_exists($configFile)) {
             $this->setComponents([
-               'encrypter' => require($configFile),
+                'encrypter' => require($configFile),
             ]);
         }
         parent::init();
     }
-    
-    
+
+    /**
+     * @param $app
+     * @return void
+     */
     public function bootstrap($app)
     {
         if ($app instanceof \yii\console\Application) {
-            
-            $this->controllerNamespace = 'nickcv\encrypter\commands';
+
+            $this->controllerNamespace = 'bereznii\encrypter\commands';
             $this->setAliases([
-                '@nickcv/encrypter' =>  dirname(__FILE__),
+                '@bereznii/encrypter' =>  dirname(__FILE__),
             ]);
         }
     }
