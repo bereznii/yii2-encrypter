@@ -1,7 +1,5 @@
 Openssl Encrypter for Yii2
 ======================
-Openssl Encrypter for Yii2
-Version 1.2
 
 This extension is used for two-way encryption.
 The cypher method used is **AES256**.
@@ -22,10 +20,8 @@ Step-by-step **encryption**:
 Step-by-step **decryption**:
 1. Fully encrypted string is decoded with [base64_decode()](https://www.php.net/manual/en/function.base64-decode.php);
 2. First 16 bytes is retrieved for further decryption process. This is IV;
-3. Remaining part of string is encrypted with [openssl_decrypt()](https://www.php.net/manual/en/function.openssl-decrypt) using IV from previous step and passphrase from ENV;
+3. Remaining part of string is decrypted with [openssl_decrypt()](https://www.php.net/manual/en/function.openssl-decrypt) using IV from previous step and passphrase from ENV;
 4. Result is the initial string.
-
-Openssl has been used in place of mcrypt because of its sheer speed in the encryption and decryption process (**up to 30 times faster**).
 
 _______________________
 
